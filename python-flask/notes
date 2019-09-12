@@ -1,0 +1,214 @@
+Use @app.route("/end/point", methods=["GET", "POST"]) to set up an API route for a GET/POST request at the "/end/point" endpoint
+
+Use app.add_url_rule("/api/candidate", "candidate", candidate) to run the candidate funtion for the candidate route in /api/candidate path
+
+@app.route("/api/candidate/<string:id>", methods=["GET"]) to pass in a variable into the URL
+def func_name(id): ...
+
+abort(404) throws 404
+
+We can give multiple routes to a given handler
+@app.route("/api/random/candidate", defaults={"nrOfItems": 1}, methods=["GET"])
+@app.route("/api/random/candidate/<int:nrOfItems>", methods=["GET"])
+def random(nrOfItems):
+    ...
+
+jsonify({}) to return a json of a dictionary
+
+make_response("", 200) returns 200 code with "" as the response data
+
+Flask folder structure should have 2 directories (static, templates). Statis should contain css and javascript scripts. Template should contain the Jinja2 templates
+
+bootswatch contains free bootstrap themes
+
+render_template('template.html', selected_menu_item="index") renders the template.html file and has the optional template context
+
+In Jinja template, you can use {% if ... %} stuff {% else %} other stuff {% end if %} to create logical blocks that will be evaluated based on context set above
+    {% if selected_menu_item == "index" %}
+    <li>Home</li>
+    {% else %}
+    <li>Not Home</li>
+    {% end if %}
+
+You can also use double curly braces to evaluate
+    <a href="{{url_for('page-index')}}"> Home </a>
+
+REST Best Practices
+    Always apply versioning for API
+    Always use meaningful HTTP Response Codes (200 OK, 201 Created, 404 Not Found, 401 Unauthorized, etc)
+    Secure your data with authentication (2-Factor if possible)
+    If needed, use caching
+
+
+Characteristics of Create Operation in RESTful APIs
+    Create operations should be mapped to HTTP POST methods
+    Meaningful HTTP Response codes should be sent to the client
+        Successful Creation: 201 - Created
+        Server Error: 500 - Internal Server Error
+        Bad Message Format: 400 - Bad Request
+    For successful creation, the response should contain the access path for the new entity
+    Requests should always be authenticated
+
+app.add_url_rule('/api/candidate', add_candidate, methods=["POST"])
+
+Characteristics of Read Operation in RESTful APIs
+    Make it possible through HTTP GET
+    Should not affect the result no matter how many times GET is called
+
+Characteristics of Update Operations in RESTful APIs
+    Usually uses the PUT HTTP Verb
+    There are two approaches
+        In case we send a PUT request to non-existing resources, they are created and saved with the response returning the access path for the new entity
+        Update operations through PUT should noly update data and NOT create, for creation the Create operation should be used
+    Always returning meaningful HTTP Response codes
+        404 - Not Found 
+        200 - OK
+        204 - No Content
+
+Characteristics of Delete Operations in RESTful APIs
+    Uses the DELETE HTTP Verb
+    Always return meaningful HTTP Response codes:
+        404 - Not Found
+        204 - No Content
+
+HATEOAS - Hypermedia as the Engine of the Application State
+Usually uses XML as message format
+Architecturally decouples the client and server
+Message also contains the operations and their routes which these can be accessed through
+
+JSON-LD
+    Standard JSON does not support HATEOAS because the client and server needs to agree on message protocol
+    JSON-LD (JSON Link Data) is a message format based on standard JSON which helps HATEOAS support and decoupling of client and server architectures
+
+
+
+
+
+
+UPDATED:
+
+Pycharm Edit Configuration
+    Flask Server 
+    Give Descriptive Name
+    Target Type -> Script Path
+        Select path to app.py
+    
+Restarting Flask
+    Can use the "Restart Button"
+    Set the following Env Vars (in project settings)
+    FLASK_ENV=development
+    FLASK_DEBUG=yes (turns on debug mode on werkzeug)
+
+How to return json
+    import jsonify
+    jsonify(key=value)
+
+Return JSON and Status Code
+    return jsonify(key=value), 404 (also kicks off 404 error code)
+
+Handling Query Parameters
+    # /parameters?name=jimmy&age=5
+    @app.route('/parameters')
+    def parameters():
+        # requires import: from flask import request
+        name = request.args.get("name")
+        age = int(request.args.get("age"))
+        if age < 18:
+            return jsonify(message=f"Sorry {name}, you are not old enough"), 401
+        else:
+            return jsonify(message=f"Welcome {name}!")
+
+Handling Path Parameters
+    # /parameters?name=jimmy&age=5
+    @app.route('/parameters/<string:name>/<int:age>')
+    def parameters(name: str, age: int):
+        if age < 18:
+            return jsonify(message=f"Sorry {name}, you are not old enough"), 401
+        else:
+            return jsonify(message=f"Welcome {name}!")    
+
+Benefits of an ORM
+    Works with Python objects, not SQL
+    Allows you to switch database easily
+    Can control structure of DB from code
+    Supports multiple database platforms
+
+Using ORM
+    import os
+    base_dir = os.path.abspath(os.path.dirname(__file__)) # finds absolute path of current app
+    app.config['SQLALCHEMY_DATABSE_URI'] = f"sqlite:///{os.path.join(base_dir, 'dbname.db')" # app = Flask(__name__)
+
+Creating ORM Models
+    from flask_sqlalchemy import SQLAlchemy, Model
+    from sqlalchemy import Column, Integer, String, Float
+    class User(Model):
+        __tablename__ = 'users'
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        email = Column(String, unique=True)
+        password = Column(String)
+
+@app.cli.commands
+    @app.cli.command('db_create')
+    def db_create():
+        db.create_all()
+
+    @app.cli.command('db_drop')
+    def db_drop():
+        db.drop_all()
+
+    @app.cli.command('db_seed')
+    def db_seed():
+        test_data = User(name='Ron', email='ron@ron.com')
+        test_data2 = User(name='Jon', email='jon@ron.com')
+        db.session.add(test_data)
+        db.session.add(test_data2)
+        db.session.commit()
+
+    set FLASK_APP env var
+    flask db_create / flask db_seed / flask db_seed should work
+        connect with sqlite3 and validate data exists!
+
+Simple GET ALL
+    @app.route('/users', methods=['GET']) #GET only endpoint
+    def get_all_users():
+        users_list = User.query.all()
+        return jsonify(users=users_list) # needs a serializer
+
+Serializing SQLAlchemy
+    Use Flask-Marshmallow (pip install flask-marshmallow)
+    from flask_marshmallow import Marshmallow
+    marsh = Marshmallow(app)
+
+    class UserSchema(marsh.Schema):
+        class Meta:
+            fields = ('id', 'name', 'email')
+
+    user_schema = UserSchema()
+    users_schema = UserSchema(many=True)
+
+Using Marshmallow to Return Data
+    @app.route('/users', methods=['GET']) #GET only endpoint
+    def get_all_users():
+        users_list = User.query.all()
+        result = users_schema.dump(users_list)
+        return jsonify(users=result.data)
+
+Using JWT
+    pip install Flask-JWT-Extended
+    import flask_jwt_extended
+    @app.route('/register', methods=['POST'])
+    def register():
+        email = request.form['email']
+        test = User.query.filter_by(email=email).first()
+        if test:
+            return jsonify(message="This email already exists"), 409
+        else:
+            name = request.form['name']
+            password = request.form['password']
+            user = User(name=name, email=email, password=password)
+            db.session.add(user)
+            db.session.commit()
+            return jsonify(message="User has been created"), 201
+
+
