@@ -195,8 +195,6 @@ Using Marshmallow to Return Data
         return jsonify(users=result.data)
 
 Using JWT
-    pip install Flask-JWT-Extended
-    import flask_jwt_extended
     @app.route('/register', methods=['POST'])
     def register():
         email = request.form['email']
@@ -211,4 +209,116 @@ Using JWT
             db.session.commit()
             return jsonify(message="User has been created"), 201
 
+    #Login
+    pip install Flask-JWT-Extended
+    from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+    app.config['JWT_SECRET_KEY'] = 'some-secret-uuid' #change this IRL
+    jwt = JWTManager(app)
+    @app.route('/login', methods=['POST']) # POST is defacto way of doing this
+    def login():
+        if request.is_json: # This requires JSON data
+            request_json = request.json
+            email = request_json['email']
+            password = request_json['password']
+        else:
+            request_form = request.form
+            email = request_form['email']
+            password = request_form['password']
+        test = User.query.filter_by(email=email, password=password).first()
+        if test:
+            access_token = create_access_token(identity=email)
+            return jsonify(message="Login succeeded", access_token=access_token)
+        else:
+            return jsonify(message="Invalid Credentials"), 401
 
+Resetting Password
+    pip install Flask-Mail
+    from flask_mail import Mail, Message
+    app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
+    app.config['MAIL_USERNAME'] = 'username' #username from mailtrap, use env var
+    app.config['MAIL_PASSWORD'] = 'password' #password from mailtrap, use env var
+    mail = Mail(app)
+    @app.route("/retrieve_password/<string:email>", methods=["GET"])
+    def retrieve_password(email: str):
+        user = User.query.filter_by(email=email).first()
+        if user:
+            msg = Message(f"Your Password Is: {user.password}", sender="admin@api.com", recipients=[email])
+            mail.send(msg)
+            return jsonify(message=f"Password Sent To: {email}")
+        else:
+            return jsonify(message="Invalid Email"), 400
+
+Retrieving All Details
+    @app.route('/planet_details/<int:planet_id>', methods=["GET"])
+    def get_planet_details(planet_id: int):
+        planet = Planet.query.filter_by(planet_id=planet_id).first()
+        if planet:
+            result = planet_schema.dump(planet)
+            return jsonify(planet=result.data)
+        else:
+            return jsonify(message="That planet does not exist"), 404
+
+Creating Object
+    @app.route('/create_planet', methods=["GET"])
+    def create_planet():
+        planet_name = request.form['planet_name']
+        planet = Planet.query.filter_by(planet_name=planet_name).first()
+        if planet:
+            return jsonify(message="A planet with this name already exists"), 409
+        else:
+            # grab other details
+            planet_type = request.form['planet_type']
+            ....
+            new_planet = Planet(planet_name=planet_name, planet_type=planet_type, ...)
+            db.session.add(new_planet)
+            db.session.commit()
+            return jsonify(message="Planet Created!")
+
+Securing Endpoints
+    @app.route('/create_planet', methods=["GET"])
+    @jwt_required # new 
+    def create_planet():
+        planet_name = request.form['planet_name']
+        planet = Planet.query.filter_by(planet_name=planet_name).first()
+        if planet:
+            return jsonify(message="A planet with this name already exists"), 409
+        else:
+            # grab other details
+            planet_type = request.form['planet_type']
+            ....
+            new_planet = Planet(planet_name=planet_name, planet_type=planet_type, ...)
+            db.session.add(new_planet)
+            db.session.commit()
+            return jsonify(message="Planet Created!")    
+
+    Once the user captures their access_token from logging in, user must pass this token as Authorization "Auth Bearer"
+
+Updating Object
+    @app.route('/planet/<int: planet_id>', methods=["PUT"])
+    def update_planet(planet_id: int):
+        planet = Planet.query.filter_by(planet_name=planet_name).first()
+        if planet:
+            planet.name = request.form['planet_name']
+            ...
+            planet.mass = float(request.form['mass'])
+            db.session.commit()
+            return jsonify(message="Planet was added")
+        else:
+            return jsonify(message="This planet does not exist") # can create it?
+
+Deleting Objects
+    @app.route('/remove_planet/<int: planet_id>', methods=["DELETE"])
+    def delete_planet(planet_id: int):
+    planet = Planet.query.filter_by(planet_id=planet_id).first()
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return jsonify(message=f"{planet.name} was deleted"), 202
+    else:
+        return jsonify(message="This planet does not exist"), 404
+
+Requirements File
+    Don't forget to pip freeze > requirements.txt
+
+Next Steps:
+    Set up productionserver
