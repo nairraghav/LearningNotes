@@ -321,4 +321,5 @@ Requirements File
     Don't forget to pip freeze > requirements.txt
 
 Next Steps:
-    Set up productionserver
+    Set up production server (PythonAnywhere, DigitalOcean, GreenUnicorn, NGINX)
+    

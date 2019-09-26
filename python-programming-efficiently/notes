@@ -1,0 +1,52 @@
+Iterator
+    Objects that define __next__()
+    Stop iteration with the StopIteration exception
+
+Useful Iterators in Itertools
+    Concatenate - itertools.chain(iter1, iter2)
+    Duplicate - i1, i2 = itertools.tee(iter, 2)
+    Running Sum - itertools.accumulate(iter)
+    Element by Element product - itertools.product(iter1, iter2)
+    Permutations - itertools.permutations(string)
+    Combinations - itertools.combinations(string)
+
+Generators can be created with comprehensions by replacing the brackets with parenthesis
+    
+Example Generator With Parenthesis
+    even = (i for i in range(20) if i % 2 == 0) # creates  generator of even numbers from 0, 20
+
+Example Generator With Yield
+    def fibonacci():
+    f1, f2 = 0, 1
+    while True:
+        yield f2
+        f1, f2 = f2, f1 + f2
+
+The above function will never end
+
+How to use:
+    f = fibonacci()
+    [next(f) for i in range(20)] # creates an array of the first 20 fibonacci numbers
+
+Named Tuple
+    A map whose fields cannot be modified (think tuple key/value)
+
+Named Tuple Example
+    import collections
+    medal = collections.namedtuple('medal', ['year', 'athlete', 'team', 'event'])
+    m = medal('1896', 'Thomas Burke', 'USA', '100m men')
+    m.year, m.athelete #returns '1896', 'Thomas Burke'
+
+Using Counter
+    teams = collections.Counter(medal.team for medal in medals) # Returns each medal.team + how many times they show up in the medal collection
+
+Using Sets
+    Sets can take advantage of using intersect (&), union(|), and difference (-)
+
+Taking Advantage of kwargs to make a filter
+def findmedal(**kwargs): # makes a dict
+    return [medal for medal in medals
+                  if all(getattr(medal,key) == value for key,value in kwargs.items()]
+    # for all kwargs, we take the key/value pair and get all medals that fulfill all medal[key] == value
+    # for example, you would run medals = findmedal(year="1900", team="USA") to get all medals from team USA in 1900
+
