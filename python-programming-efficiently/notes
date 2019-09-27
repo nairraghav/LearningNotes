@@ -1,3 +1,4 @@
+2. WRITING PYTHON EFFICIENTLY
 Iterator
     Objects that define __next__()
     Stop iteration with the StopIteration exception
@@ -40,6 +41,13 @@ Named Tuple Example
 Using Counter
     teams = collections.Counter(medal.team for medal in medals) # Returns each medal.team + how many times they show up in the medal collection
 
+Default Dict
+    Default dicts can be used when we want to have a collection as values in a dictionary
+    Example
+        events_by_athlete = collections.defaultdict(set) # here each value for key in dict is a set
+        for medal in medals:
+            events_by_athlete[medal.athlete].add(medal.event)
+
 Using Sets
     Sets can take advantage of using intersect (&), union(|), and difference (-)
 
@@ -50,3 +58,31 @@ def findmedal(**kwargs): # makes a dict
     # for all kwargs, we take the key/value pair and get all medals that fulfill all medal[key] == value
     # for example, you would run medals = findmedal(year="1900", team="USA") to get all medals from team USA in 1900
 
+
+
+4. ADVANCED: PYTHON OBJECT-ORIENTED AND FUNCTIONAL PROGRAMMING
+Programming Paradigms
+    Procedural: follow a list of instructions (C, Basic, Assembly, SH, Python)
+    Object-Oriented: Create and maniplate a collection of objects (Java)
+    Functional: Specify data flow and transformations between functions (Haskell)
+    Declarative Specify the problem, the language will solve it (SQL)
+
+Object-Oriented Programming Principles
+    Abstraction / Encapsulation
+        Separate interface and implementation
+        Group data members and methods together
+    Inheritance
+        Build more specialized objects from simpler ones
+    Polymorphism / Dynamic Dispatch
+        Process objects depending on their type
+        Choose version of function depending on object
+    
+
+
+
+5. INTRODUCTION TO PERFORMANCE OPTIMIZATION IN PYTHON
+
+
+
+
+6. NEXT STEPS
