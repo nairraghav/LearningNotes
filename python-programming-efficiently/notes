@@ -76,13 +76,99 @@ Object-Oriented Programming Principles
     Polymorphism / Dynamic Dispatch
         Process objects depending on their type
         Choose version of function depending on object
-    
 
+Function Decorators
+    High order functions that take one function and return another
+
+    Example:
+        def printargs(func):
+            def decorated(*args, **kwargs):
+                print("Function {} called with args = {} and kwargs = {}".format(func.__name__, args, kwargs))
+                return func(*args, **kwargs)
+            return decorated
+
+        @printargs
+        def fibonacci():
+            ...
+
+        Everytime fibonacci is called, we print out that it was called along with the argments
+        Problem: Now when we refer to fibonacci it comes from the printargs, so we can fix this:
+            @functools.wraps(func) # this goes on top of def decorated
+
+    Helping Recursion
+        When working with recursion, we may repeat a bunch of function calls that were already calculated (think: fibonacci)
+        We can fix this with another decorator
+        @functools.lru_cache(maxsize=None) # This will defer to cache for a function value and this cache stores everything since there is no limit
+
+Lambda
+    An anonymous function that can be used, especially when dealing with map, filter, reduce
+    Example:
+        lambda a: 2*a # this function takes some value and doubles it
+
+Map
+    Mapping allows us to take a function and apply it to some collection to get a new collection
+    In the example below, we take a function that doubles and applies it to [0, 1, 2, 3, 4]
+    Example:
+        for i in map(lambda a: 2*a, range(5)):
+            print(i) # prints 0, 2, 4, 6, 8
+
+Filter
+    Similar to mapping except it filters out values that we want, the function must return a boolean
+    Example:
+        for i in filter(lambda a: a % 2 == 0, range(5)):
+            print(i) # prints 0, 2, 4
+
+Reduce
+    Similar to map and filter, reduce takes a function and a sequence and returns a final result
+    The function is repeated with the value from before and the next item in the list
+    Example:
+        reduce(lambda a,b: a + b, range(5)) # equivalent to ((((0 + 1) + 2) + 3) + 4) == 10
 
 
 5. INTRODUCTION TO PERFORMANCE OPTIMIZATION IN PYTHON
+Python is interpreted rather than compiled: fewer optimizations and more overheads
+    Less efficient than a compiled language
+Dynamically typed: larger data strcutures and more checks
+Introspective and (re)configurable: more levels of indirection
 
+Performance Strategies in python
+    Modify algorithms and data strcutures to reduce CPU and memory usage
+    Profile code, and then optimize it
+    Use compiled libraries
 
+Profiling
+    timeit  - Runs multiple times and finds an average
+    prun    - Gives more detailed information to show us total time spent in all funtions
+    lprun   - Gives us the % of total time spent within functions
+
+    We can use numpy to do mathematics or interact with large arrays to reduce time
+
+Speeding Up Maths in python
+    Optimized numpy expressions: numexp
+    Compiled python: numba and theano
+    Compiled Python with Types: Cython
+    Wrap C, Fortran for Python: SWIG, Boost::Python, Cython
+    Optimizer Interpreter: pypy (just in time compiler)
+
+Memory Profiling
+    Decorate the function with @profile
+
+Record-Like Objects (Ranking Space Taken)
+    dict > class > list > class (with slots) > namedtuple > tuple  > numpy record array
+        Dicts take the most space, numpy record array taking the least
+
+Parallelism
+    Multithreading vs. Multiprocessing
+        Multithreading is having one process but having multiple threads that share code/variables
+        Multiprocessing is having multiple processes with its own set of code/variables
+
+    pool = multiprocessing.Pool(processes=numProcess)
+    partial_result = pool.map(function, data)
+    pool.close()
+    return do_something(partial_result)
 
 
 6. NEXT STEPS
+    Code Clinic: Python
+    Introduction to Data Analysis with Python
+    
