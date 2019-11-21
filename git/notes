@@ -1,0 +1,36 @@
+Reasons to Force Push
+    Local version is better than the remote version
+    Remote version went wrong and needs repeair
+    Versions have diverged and merging is undesirable
+
+How To Force Push
+    git push -f 
+    git push --force
+
+Force Pushing To A Remote
+    Use with extreme caution
+    Easy way to anger your whole development team
+    Disruptive for others using the remote branch
+    Commits disappear
+    Subsequent commits are orphaned
+
+Identify Merged Branches
+    List branches that have been merged into a branch
+    Useful for knowing what features have been incorporated
+    Useful for cleanup after merging many features
+    Uses the current branch by default
+    "Branches whose tips are reachable from the specified commit (HEAD if not specified)"
+    Branch tip is in the history of the specified commit
+    Can specify other branch names or commits
+
+How To Check For Merged Branches
+    git branch --merged (shows local branches merged into current branch)
+    git branch --no-merged (shows local branches not merged into current branch)
+    git branch -r --merged (shows remote branches merged into current branch)
+    git branch --merged HEAD
+    git branch --merged july_release (starts at tip july_release, we can also use commit hashes)
+
+Delete Local and Remote Branches
+    # must be on different branch from branch to be deleted
+        git branch -d branch_name (this deletes the local branch, checks to see if unmerged)
+        git branch -D branch_name ()
