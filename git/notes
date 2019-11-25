@@ -31,6 +31,33 @@ How To Check For Merged Branches
     git branch --merged july_release (starts at tip july_release, we can also use commit hashes)
 
 Delete Local and Remote Branches
-    # must be on different branch from branch to be deleted
-        git branch -d branch_name (this deletes the local branch, checks to see if unmerged)
-        git branch -D branch_name ()
+    Local Branch
+        # must be on different branch from branch to be deleted
+            git branch -d branch_name (this deletes the local branch, checks to see if unmerged)
+            git branch -D branch_name (this will delete the branch even if it is unmerged)
+    Remote Branch
+        git push --delete origin new_feature (this deletes the new_feature remote branch)
+        git push -d origin new_feature (same as above but quicker)
+        git push origin :new_feature (same as above -- max quickness)
+
+Create And Checkout New Branch
+    git checkout -b new_branch (creates new_branch and checks it out)
+
+Add & Commit Staged Files
+    git commit -am "change commit details" (this will add all unstaged stages into the commit and create it)
+
+Stale Branch
+    A remote-tracking branch that no longer tracks anything because the actual branch in the remote repository has been deleted
+
+Remote-Tracking Branch
+    The branch on your local machine that represents the remote branch (origin/remote-branch)
+
+When remote branches are deleted, our remote-tracking branches are not removed, we must do this manually
+
+Pruning Remote-Tracking Branches
+    git remote prune origin (deletes stale remote-tracking branches)
+    git remote prune origin --dry-run (allows us to see would happen without actually doing so)
+    git fetch --prune (prune and then fetch)
+    git config --global fetch.prune true (this will change your settings so that upon fetch, git will prune)
+
+
