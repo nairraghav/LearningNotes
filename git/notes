@@ -60,4 +60,42 @@ Pruning Remote-Tracking Branches
     git fetch --prune (prune and then fetch)
     git config --global fetch.prune true (this will change your settings so that upon fetch, git will prune)
 
+Tags
+    Tags allow marking points in history as important
+    A named reference to a commit
+    Most often used to mark releases (v1.0, v1.1, v2.0)
+    Can mark key features or changes (ecommerce, redesign)
+    Can mark points for team discussion (bug, issue136)
+
+Creating Tags
+    git tag issue136 git-commit-sha (adds a lightweight tag)
+    git tag -a v1.1 -m "Version 1.0" git-commit-sha (adds an annotated tag -- most common)
+
+List Tags
+    git tag (lists tags)
+    git tag --list (lists tags)
+    git tag -l (lists tags)
+    git tag -l "v2*" (lists all tags beginning with v2)
+    git tag -l -n (list tags with annotations)
+    git show v1.1
+    git diff v1.0..v1.1
+
+Delete Tags
+    git tag --delete v1.1 (delete a tag)
+    git tag -d v1.1 (delete a tag)
+
+Pushing Tags To Remote
+    Like branches, tags are local unless shared to a remote
+    git push does *not* transfer tags
+    Tags must be explicitly transferred
+    git fetch will automatically retrieve shared tags
+    git push origin tag-name (pushes the tag to the remote server)
+    git push origin --tags (pushes ALL tags to a remote server)
+    git fetch (fetch commits and tags)
+    git fetch --tags (Fetches only tags -- with necessary commits)
+
+Deleting Remote Tags
+    git push origin :tag-name (deletes remote tag)
+    git push --delete origin tag-name (deletes remote tag)
+    git push -d origin tag-name (deletes remote tag)
 

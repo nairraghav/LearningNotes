@@ -1,0 +1,59 @@
+NumPy arrays are a mutable data structure
+    Natively support multidimensional indexing
+    Have restrictions on data types
+NumPy allows us to perform operations on vectors and matrices with much more ease and efficiency than traditional Python lists
+
+Example NumPy Array
+import numpy as np
+vec = np.array([1, 2, 3])
+
+vec.shape # returns the dimensions of the array (returns (3,))
+vec.reshape(r, c) #reshapes the array into r rows and c columns
+
+We can also create matrices and examine their shape
+mat = np.array([[2, 0], [5, 1], [7, -3]])
+mat.shape # returns (3, 2)
+
+Indexing NumPy Arrays
+    Given a matrix mat, mat[2,1] would return the element in the 2nd row and 1st column
+
+Slicing NumPy Arrays
+    We can also slice using the colon
+    mat[2:5] # returns us the slice of the matrix of rows 2(inclusive)-5(exclusive)
+    mat[:, 4:8] # returns us the slice of the matrix of all rows but columns 4(inclusive)-8(exclusive)
+
+Modifying Arrays
+    Since NumPy arrays are mtable, we can their values via indexing
+    mat[2:3] = 100 # sets all numbers in the 2nd row as 100
+    We can also replace it with a new array/matrix as long as the size fits
+        replace = np.array([[1, 2], [3, 4]])
+        M[8:10, 1:3] = replace
+
+When reshaping, you can use -1 as a replacement to let Python know to determine the dimension
+    Row: .reshape(1, -1)
+    Column: .reshape(-1, 1)
+
+Boolean Indexing
+    Given an array, we can get a boolean array to represent depending on some operation
+    Given an array arr (filled with numbers), we want to get the subset where the numbers are greater than the mean
+    mean = np.mean(arr)
+    arr[arr / mean > 1] # this returns the subset of numbers greater than the mean of arr
+
+Linear Algebraic Functions
+    Scalar Addition
+        vec = np.array([3,5,7])
+        mat = np.array([[3,2],[7,4],[9,1]])
+        5 * vec # multiplies each number in vec by 5 to get array([15, 25, 35])
+        2 + mat # increments each number in mat by 2 to get array([[5,  4], [9,  6], [11,  3]])
+    Elementwise Operation
+        vec2 = np.array([2, 3, 4])
+        mat2 = np.array([[1, 2], [2, 3], [3, 4]])
+        vec * vec2 # multiplies each number in vec by the appropriate number in vec2 to get array([3*2, 5*3, 7*4]) = array([6, 15, 28])
+        mat + mat2 # adds each number in mat with the appropriate number in mat2 to get array([[3+1,2+2],[7+2,4+3],[9+3,1+4]]) = array([[4,4],[9,7],[12,5]])
+    Vector Dot Product and Matrix Inner Product
+        We use the .dot() function to handle both the vector dot product and matrix inner product
+        vec.dot(vec2) # calculates the dot product array([3*2 + 5*3 + 7*4]) = array([6 + 15 + 28]) = array([49])
+        mat3 = np.array([[2, -1, 3, 0], [-2, 0, -1, 4]])
+        mat.dot(mat3) # calculates the matrix inner product to get array([[2, -3,  7,  8], [6, -7, 17, 16], [16, -9, 26,  4]])
+            This can also be written as np.dot(mat, mat3)
+        
