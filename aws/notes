@@ -1,0 +1,161 @@
+The Cloud
+    IaaS
+    PaaS
+    SaaS
+
+PaaS Manages:
+    Servers
+    Load Balanaces
+    File Storage
+    Networking
+    Runtime
+    OS
+    
+
+SaaS manages:
+    Application Data
+    Data
+    Runtime
+    OS
+    Servers
+    Load Balanaces
+    File Storage
+    Networking
+
+AWS Spans All Categories
+
+Business Benefits of Using AWS
+    Minimize Upfront Investment
+        Don't need to buy racks, power supplies, connections
+    Offers Just-In-Time Infrastructure
+        Only allocates what is used what is needed, when it is needed
+        Can be costly if this is wrong
+        If application doesn't not have the capacity, the application can be down and unable to be accessed (loss of revenue)
+        If application has too much capacity, they're overpaying for things not being used (wasted money)
+    Cloud Scalability
+        Keeps costs low as you don't overpay for services not being used
+        Allows you to scale up as you need it
+        Teams don't need to worry abotu quanitity of hardware needed or about extra usage
+        Also no long-term contracts
+
+Technical benefits
+    Scriptable Infrastructure
+        Hardware -> Software
+        Use APIs to automatically scale infrastructure
+            Scaling Out
+                Increase number of hardware (more web servers)
+            Scaling In
+                Decrease number of hardware (removing servers)
+            Scaling Up
+                Improve performance of hardware, upgrade to a bigger box
+            Scaling Down
+                Decrease performance of hardware, downgrade to a smaller box
+    On-Demand Scaling
+        During a campaign, application can be proactively scaled out and then scaled back in once the moment is over
+    Improved development lifecycle
+        Production can be cloned as development/test environments
+    High Availability & Disaster-Recovery Benefits
+        Can have multiple datacenters so that if one center is destroyed, all company data is not lost
+
+Elasticity
+    Cloud's ability to change depending on demand on the system
+    Fixed Capacity
+        If change is needed, much planning, time and money are needed to make changes
+
+DBA
+    Using APIs and scripting changes
+    Geographically distributed systems
+    Different data storage options
+
+Design For Failure
+    "Everything fails, all the time"
+    The idea here is that while failure should be expected within individual components, the entire system can be architected to avoid application failure
+    Failure Now -> Failproof Later
+    Single points of failure = Bad
+    If a web application has both the web server and the database on the same instance, this is not designed for failure
+        If anything happens, the entire application fails
+        One better step would be to moving the database into its own instance, having multiple web servers, and having a load balancer push to each web server
+            The system can now tolerate a web failure without a system-wide failure
+            Unfortanately now, the DB and the load balancer are single points of failure
+    Avoid single points of failure
+    Consider how the fail-over process happens (incorporate into application design)
+
+Implement Elasticity
+    Scale components on a fixed basis (hourly, daily, weekly)
+        Depends if the traffic is highly predictable
+    Scale components in anticipation of an expected event (scale up/out during Superbowl)
+    Setup monitoring of metrics and scale based on that
+        CPU utilization
+        I/O
+
+Process Automation
+    Automatic deployment
+    System configuration adjustment
+    AWS has deployment services
+
+Bootstrapping
+    Creating a self-sustaining startup process that runs on its own
+    For AWS, the process needed to get applications running on an EC2 instance
+
+Decoupling Components
+    Design principle concerned with minimizing dependencies between components in order to improve scalability
+    Strive for a system where if one component fails, the other components still keep going
+
+Performance Optimization
+    Know the services landscape
+        Investigate highly scalable services and how they can solve your problems
+    Push the virtualization boundaries
+    Monitor your application
+        Cloudwatch
+        Alarms can trigger automated actions
+    Keep up with the changing landscape
+
+Security
+    Cloud architects must familiarize themselves with cloud security practices, as well as be aware of how security responsibilities are shared between the cloud provider and customer
+        Undeserved reputation for lacking security at the beginning
+        Customer is still responsible for a lot of the security implementation
+            Cloud Provider
+                Physical security
+                Infrastructure
+                Equipment
+                Separation from other customers
+            Cloud Customer
+                Network-level Security
+                Application-level Security
+                Data-level Security
+        Data must be protected at rest
+            Encryption
+    Almost all AWS services have an API
+        Access keys are required in the request
+        Use https to access all AWS API endpoints
+        Pass in access key info during build or launch of your application
+            Encrypt before sending
+        Use IAM roles and launch your instance in a specific role so it will have the access it needs
+        Rotate your access keys often
+    IAM
+        Use IAM to manage acess
+        The service used to create users and handle permissions
+        Create separate users for different levels of access
+        Use Security Groups = Firewalls
+    Secure your own application code
+    Must remain aware of your responsibility
+        Cloud provider will not handle security for totality of the application 
+
+Optimize Cost
+    Cost optimization is the ability to avoid, identify, eliminate unnecessary costs
+    Embrace the consumption payment model
+        Pay as you go
+        Only billed for actively used resources
+        Number of actively used resources can be optimized
+    Match supply with demand
+        When using test servers, turn them off at night since they won't be used
+        40 hours during workweek instead of 168 hours week
+    Autoscaling
+        Allows adding/removing of resources as needed
+    Cost-Effective Resources should be utilized
+        The right EC2 server instance being used
+        Scale up/down as required
+    Keep tabs on the tab
+        Cost Calculators
+        Trusted Advisor Recommendations
+        Billing Alerts
