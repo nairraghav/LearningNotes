@@ -159,3 +159,125 @@ Optimize Cost
         Cost Calculators
         Trusted Advisor Recommendations
         Billing Alerts
+
+Shared Security Model
+    Both the cloud customer and cloud service provider are responsible for security objectives
+    AWS provides Security of the cloud
+        Physical security 
+        Global Infrastructure
+    Client Customer is responsible Security In the Cloud
+        Anything put on the infrastructure
+        Account and user management security
+    Service Categories
+        Infrastructure Services
+            Examples
+                EC2
+                EBS (Block Storage)
+                AWS Auto Scaling
+        Container Services (PaaS)
+            Runs on EC2 instances
+            Abstracts out platform layer
+            Examples:
+                RDS
+                Elasticsearch
+                Elastic Beanstalk
+                ECS
+        Software Services
+            Abstract the platform and management layer
+            Endpoints are accessed using APIs
+            Examples
+                Amazon Elastic Tanscoder
+                Amazon Lex
+                Amazon Athena
+            Shared Security Line for IaaS
+                AWS Responsible For
+                    Facilities
+                    Virtualization Infrastructure
+                    Network Infrastructure
+                    Hardware Infrastructure
+                Customer Responsible For
+                    Data At Rest
+                    AMIs
+                    Applications and supporting software
+                    OS
+                    Network config
+                    Firewall config
+                    Account credentials and account management
+                    IAM user management
+            Shared Security Line for PaaS
+                AWS Responsible For
+                    OS
+                    Application and platform
+                    Facilities
+                    Virtualization Infrastructure
+                    Network Infrastructure
+                    Hardware Infrastructure
+                Customer Responsible For
+                    Data At Rest
+                    Data In Transit
+                    Network Traffic Protection
+                    Firewall config
+                    Account credentials and account management
+                    IAM user management
+            Shared Security Line for SaaS
+                AWS Responsible For
+                    OS
+                    Application and platform
+                    Facilities
+                    Virualization
+                    Infrastructure
+                    Network Infrastructure
+                    Hardware Infrastructure
+                    Network traffic protection
+                    Firewall config
+                Customer Responsible For
+                    Data At Rest
+                    Data In Transit
+                    Account Credentials and account management
+                    IAM user management
+
+IAM Master Account
+    Identity Access Management
+    When an AWS is first created, it creates the Master account
+        The first user created is the Master User (similar to root)
+    Master User has access to everything (including billing information)
+        Keep this account secured
+        Do not used for basic access
+    Keeping Master User Secure
+        Don't share credentials
+        Don't use this user for routine access
+        Turn on MFA
+
+IAM: Groups, Roles, and Permissions
+    IAM Users
+        Newly created user (outside of Master User) has no access by default
+            Least privilege policy
+        If they need access to console, they need login credentials
+        If need API access, requires API Key
+        Can give individual permissions or place them in a group
+    IAM Groups
+        A set of one or more permissions
+        Users are added to these groups
+        Permissions managed on a group level
+    IAM Roles
+        Similar to a user
+        Assumed by resources requiring the role
+        No login credentials
+        When a role is assumed, necessary access keys are generated dynamically
+        When a role is created, one or more permissions are set to the role
+            When a user/role aassumes the role, the permissions will be allowed and available when role is being used
+            Previously defined permissions are temporarily rescinded until they have stopped assuming the role
+            Way to give access to resources that is normally not taken to act on behalf of the account owner
+        Roles can be assumed to:
+            Allow temporary security credentials
+            An alternative to credential sharing
+            No need to define permissions and manage each entity
+        Example:
+            Third-Party Vendor account access
+                AWS recourse can be launched into roles
+                Give them an IAM role (no credentials)
+                Needed access keys can be embedded into resources at launch, rather than shared or stored on the file system
+        Never use your master account to access your resources or manager your services
+        Create seprate users, groups, roles, and permissions in IAM
+        Only allow access when absolutely needed and only to the specific resources that are needed
+
