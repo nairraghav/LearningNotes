@@ -281,3 +281,149 @@ IAM: Groups, Roles, and Permissions
         Create seprate users, groups, roles, and permissions in IAM
         Only allow access when absolutely needed and only to the specific resources that are needed
 
+Creating A New User
+    After creating a Master user, create a new user
+        Log in as Master
+        Search for IAM
+        Go to "Users" on left nav bar
+        Click "Add User"
+        Follow instructions
+
+Creating A Key Pair
+    Done via the EC2 service
+        Go to "Key Pairs" in the left navigation bar
+    Rotate these keys out every so often
+    Good to have different key pairs for different users (dev, production, etc)
+    Upon creation, it will generate a .pem file, this is the private key
+        Will need to update the accessibility of the file
+        Make it read only
+            chmod 0400 key-pair.pem
+
+Security Groups
+    Security groups determine who can communicate with resources
+        Can be applied to multiple resources
+    Multiple resources can be applied to a single security group
+    By default, resources will be given a default security (with the most limited privileges)
+    Security Group Rules
+        Traffic Type
+            SSH, RDP, HTTPS
+        Protocol
+            TCP, UDP
+        Port Range
+        Source
+            IP Addresses or Security Group
+            Uses CIDR notation
+    Use security groups to control the inbound and outbound traffic to AWS resources and follow the principle of least privilege when defining roles
+    Consider the following example
+        public -> load balancer -> web service -> database
+            You want to use security groups to allow anyone to access the load balancer via http/https, only allow load balancer requests tot he webservice, and only web service requests to the database
+            This is the benefit of using security groups
+
+Creating A Security Group
+    Use the EC2 service
+    Find Security Groups under Network & Security groups menu in left nav bar
+    Click Create Security Group
+        There is one by default
+    Provide the information the name and virtual private cloud environment (VPC)
+    Add the inbound/outbound rules
+    For the source, you can specify the group id instead of an IP
+
+VPC
+    Enables AWS resources to be launched into a virtual network defined by the customer
+    Successor to EC2 Classic
+        Ran in a single flat network
+        Network shared with other AWS customers
+        Autmatically associated with a public and private IP
+        Everything internet addressable
+        No longer available after Dec 4th, 2013 -- not secure
+    With VPC
+        Logically isolated to only one AWS account
+        Not automatically addressable via the public internet
+        Private and public interface control
+        Both inbound and outbound traffic can be controlled
+        Muliple IP addresses can be assigned
+        Elastic interface networks can be assigned
+        VPN connection
+    Default VPC
+        No configuration
+        Ready to use
+    VPC Setup
+        Choose which region
+        Specify range of internal IP ranges for the entire VPC network
+            CIDR notation
+            Ensure range allows for growth
+        Create subnets
+            Subset IP range of entire VPC network
+            Defined within Availability Zones
+        Attach gateway interfaces
+    Set up custom VPCs to better protect AWS resources and fully control the security and topology of the network
+
+Amazon EC2
+    The service that provides servers
+    The elasticity makes the choice between big/small and few/many easy
+    Elastic IPs
+        Not EC2 instance specific
+        Controlled and owned at account level
+        Easily remapped from instance to instance
+    Failover gracefully by utilizing elastic IPs
+
+Regions and Availability zones
+    AWS operates in 22 geographical regions
+        Distributed Worldwide
+    Each region has multiple availability zones
+        Distinct data centers connected via a fast fiber network
+    Availabiltiy Zones
+        Fast fiber network connection
+        Physically isolated (to avoid natural disaster issues)
+    Use multiple regions and availability zones to achieve high availability, fault tolerance, and disaster recovery requirements
+
+Amazon Machine Image (AMI)
+    Packaged environment and settings
+    Basic unit of deployment
+    Deploy one or several
+    Typical Components
+        Template for the root volume
+        Launch permissions
+        Block device mapping
+    Maintain an AMI so that you can restore and clone environments very easily and across multiple availability zones
+
+Bootstrapping
+    The process to get an application up and running on an EC2 instance (or other AWS service)
+    An example bootstrap process could be:
+        Mount drives
+        Start services
+        Pull down files
+        Get latest software
+            Apply software patches
+        Register with load balancer
+    Bootstrapping Tools
+        Running custom scripts
+            Configuration settings, start services, apply updates
+            cloud-init (Linux)
+            EC2Config (Windows)
+    Use custom scripts or configure management tools to bootstrap instances
+
+Elastic Block Storage (EBS)
+    Storage resources separate from ECS
+    EBS - persistent
+    Local storage - temporary
+        Standard
+        Provisioned IOPS (Input Output Operations Per Second)
+    Volumes up to 16 TB
+    Attach multiple volumes to a single instance
+    Specify I/O Performance
+    Format with a filesystem and use like any other block device
+    Create point-in-time snapshots
+        Can be used to instantiate new volumes
+        Stored on S3
+        Stored incrementally (only changed blocks are saved)
+            Only billed for amount of data that changed
+        Deleting only removes what is not needed by other snapshots
+    Copy snapshots across regions
+        Immediate access
+        Lazy loading of data to new volumes
+        Useful for resizing volumes
+    Use CloudWatch to view performance metrics
+    Utilize EBS and take advantage of incremental snapshots which are automatically uploaded to S3, and keep persistent data independent to EC2 instances
+
+Launching EC2 Instance
