@@ -427,3 +427,11 @@ Elastic Block Storage (EBS)
     Utilize EBS and take advantage of incremental snapshots which are automatically uploaded to S3, and keep persistent data independent to EC2 instances
 
 Launching EC2 Instance
+    Search for EC2 Service
+    Click "Instances" on the left navigation menu
+    Launch Instance button
+    Select the AMI
+        Amazon Linux 1
+    Pick Instance Size
+        Default Micro Instance
+    
