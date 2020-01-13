@@ -1,0 +1,262 @@
+What Is Clean Code?
+    Written with humans in mind
+    Names are easy to understand
+    Formatted consistently
+    Clearly communicates intent
+
+Clean Names
+    Using clean names help understanding code quickly
+    We can assume add(5,4) adds 5 and 4 whereas a(5,4) is not as obvious
+
+Clarity over Brevity
+    Example: for f in fruits
+    Using f is not as obvious as what it could represent, instead use fruit
+
+Acronyms and Abbreviations
+    When using conjoined acronyms, it can be hard to understand
+    Ex: rename HTTPAPIClient to HttpApiClient
+    Try to avoid abbreviations so someone who isn't aware of them can still quickly understand code
+
+Class and Type Names
+    Class names should be nouns with the first letter capitalized
+        class Performer
+        class Performance
+    Avoid verbs
+        class Performed (do not do)
+        class Performing (do not do)
+    Use adjective prefixes to convey time
+        class ActivePerformance
+        class PastPerformance
+    Avoid adjectives
+        class Huge (do not do)
+        class Slow (do not do)
+    Can use adjectives as prefixes to nouns
+    Avoid single letter class names or prefixes (unless templates)
+        class P (do not do)
+        class CPerformer (do not do)
+        class CustomList<T> {} (okay)
+    Avoid all capital acronyms
+        class HTTPAPIPerformer (do not do)
+        class HttpApiPerformer (okay)
+    Avoid abbreviations
+        class Perf (do not do)
+    Avoid lower case capitalization
+        class performance (do not do)
+    Avoid using plural nouns for single class names
+        class Performers (do not do)
+    Can use plural nouns for collection classes
+        class Perfomers:
+            def __getitem__
+            def __iter__
+
+Method and Function Names
+    Prefer present tense verbs for method names
+        def perform
+        def open
+        def close
+        def validate
+    Avoid gerunds
+        def performing
+        def opening
+    Avoid past tense verbs
+        def performed
+    Can use 'is_'/'has_' prefix for past tense verbs
+        def is_performing
+        def has_closed
+    Some communities prefer using the 'get_' prefix for accessors
+        def get_name
+        def get_address
+
+Variable Names
+    Prefer singular nouns for primitive types and objects
+        name = 'Alma'
+    Use plural nouns for collections
+        names = ['Alice', 'Bob']
+    Avoid verbs for variables that store primitive types
+        int perform = 12 (do not do)
+    Try to convert verbs into nouns
+        int performanceCode = 12
+    If using lambdas/closures, follow function/method names
+    Avoid single letter variable names
+        i = 12 (do not do)
+        index = 12 (okay)
+    Avoid confusing acronyms and abbreviations
+        dbsqlSelAllNames = "select * from names" (do not do)
+    Separate acronyms and expand abbreviations
+        dbSqlSelectAllNames = "select * from names"
+    Avoid complicated prefixes such as hungarian notation
+        String f_strFirstName = "Jefferson"; (do not do)
+    Avoid using the type name as a suffix
+        String lastNameString = "Amaya"
+        String lastName = "Amaya"
+
+Parameter Names
+    Prefer singular nouns
+    Prefer plural nouns for collections
+    Use noun version when naming a parameter for a function/closer
+    Avoid single letter parameter names, spell the words out
+    Avoid abbreviations
+    Avoid starting with capital letters
+    When using multiple acronyms, separate each one
+    Avoid using datatype as a suffix
+
+Constant Names
+    Capitalize first character
+    Singular nouns for primitive values
+    Plural nouns for a collection of values
+    Avoid single letters and abbreviations
+    Ensure separation between acronyms
+
+Enumerations
+    Enumeration Name: Singular Noun
+    Keep Enum Members Consistent
+
+Constant Formatting Rules
+    // Java, Ruby, Python, Rust
+    DIRECTORY_NAME
+    
+    // C#, GO
+    FirstName
+    StatusUpdate
+
+Enumeration Formatting Rules
+    // C#, Rust
+    InputEvent::KeyUp
+    InputEvent::KeyDown
+
+    //Java and Python
+    enum Day {
+        SUNDAY,
+        MONDAY,
+        ...
+    }
+
+Emulating Enumerations
+    Use all capitalized characters
+
+Formatting Affects Readability
+    A large program can be formatted as a single line of text
+    It is possbile to craft difficult to read code
+    Even accidentally
+
+Indentation and Readability
+    Some languages enforce indentation rules (Python)
+
+Rules for Indentation
+    Be consistent
+    Mixing and matching will cause extensive confusion
+    Pick either tabs or spaces, but never both
+
+How Many Spaces Is Enough?
+    Either two or four is a good guideline
+    Pick a number and be consistent
+    Your text editor can enforce tabs vs spaces
+    Use the squint test
+        Each chunk of code should serve a singular purpose
+        Nested chunks should be indented a level deeper
+
+Block Start and Stop Styles
+    // Common C# conventions
+    if (value)
+    {
+        ...
+    }
+
+    // Common Java Convention
+    if (value) {
+        ...
+    }
+
+Line Wrapping
+    Try to wrap paramters on their own lines
+
+Vertical Whitespace
+    Improves top to bottom readability
+    Used to group related chunks of code
+    Blank lines:
+        after imports
+        between functions
+        between chunks of code between comments
+        before returns
+
+Horizontal Whitespace
+    Improves left to right readability
+    Indentation is a special form
+    A space after every comma
+    A space before and after boolean operators (+, -, /, *)
+
+Comments
+    Chunks of text ignored by the compiler
+    Only read by humans
+    Tool for communicating intent
+    Best comments answer why questions
+
+Bad Comments
+    Comments that answer what questions
+    Comments which intend to make code easier to read
+    Comments which are used to disable code from executing
+
+Unnamed Constant: Template String
+    Named Constants
+        Special kind of variable that is not allowed to change
+        Allows associating a descriptive name to a constant value
+
+Method Parameters
+    Best methods only take few parameters
+    Method name can imply order
+    Standard should be to have less than 3 parameters per method
+
+Complex Boolean Logic
+    Used to encode important details and business rules
+    Often very complex and difficult to understand
+    Meaning is not always clear
+
+Use Predicate Methods
+    Wraps or encapsulates Boolean logic
+    Return either true or false
+    The method name can convey meaning
+    Ex:
+        def isStringValid(input):
+            return input.endswith('?') || input.endswith('!')
+
+The Rule of Three
+    Don't repeat yourself more than 3 times
+
+Example: Printing Blank Lines
+    print('')
+    print('')
+    print('')
+
+    vs.
+
+    for _ in range(3):
+        print('')
+
+What Is a Unit Test
+    Isolated
+    Clean
+    Fast
+    Focused
+    Independent
+    Concise
+
+Keep Unit Tests Fast
+    Execute in less than one second
+    Avoid communicating with external services and databases
+        Use mocks
+
+Unit Tests Are Documentation
+    Craft them with this in mind
+    Each test should contain exactly one assertion
+        Needs to have a single reason to fail
+
+Unit Tests Should Be Isolated
+    Ensures that debugging is quicker so we know exactly where to look
+    Avoids dependencies on other tests
+    Encourage using the test runner to run tests in a random order
+
+Don't Repeat Yourself (DRY)
+    It's possible to take this approach too far
+    There is some debate about how much DRY should apply to test code
+    Test suites with excess repetition are hard to maintain
+
