@@ -1,0 +1,58 @@
+Computer systems are classified into four categories
+    SISD
+        Single Instruction Single Data
+    SIMD
+        Single Instruction Multiple Data
+    MISD
+        Multiple Instruction Single Data
+    MIMD
+        Multiple Instruction Multiple Data
+
+Operations Executed by CPU
+    Fetch
+        Fetches the data and instructions from a memory area called register
+    Decode
+        The CPU decodes the instructions
+    Execute
+        The instruction is carried out on the data and the result of the operation is stored in another register
+
+Main Elements of SISD Architecture
+    Central memory unit
+    CPU
+    I/O system
+
+SIMD
+    A SIMD computer consists of n identical processors, each with its own local memory where it's possible to store data
+    the processors work simultaneously on each step and execute the same instruction, but on different data elements
+    The algorithms for these computers are relatively easy to design, analyze, and implement
+
+Memory Organization
+    The way in which data is accessed
+    The main problem: Making the response time of the memory compatible with the speed of the processor
+    When the processor starts transferring data, the memory will remain occupied for the entire time of the memory cycle
+    During this time, no other I/O device can be using that memory
+
+Shared vs. Distributed Memory
+    If a processor were to execute the instruction load R0, i, which means load into the R0 register the contents of the memory location i, the question is what should happen
+        Shared Memory
+            The i index is a global address and the memory location i is the same for each processor
+        Distributed Memory
+            i is a local address
+    If two processors were to load the statement R0 at the same time
+        Shared memory
+            They would load the same information in their registers R0
+        Distributed memory
+            Different values may end up in the respective register's R0
+
+Features of Shared Memory Systems
+    The memory is the same for all processors
+    The synchronization is made possible by controlling the access of processors to the shared memory
+    A shared memory location must not be changed
+    Sharing data is fast
+
+The Memory Access in Shared Memory Systems
+    Uniform Memory Access (UMA)
+    Non-uniform Memory Access (NUMA)
+    No Remote Memory Access (NORMA)
+    Cache Only Memory Access (COMA)
+
