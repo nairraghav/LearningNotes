@@ -1,0 +1,185 @@
+OAuth2.0 Tokens
+    Access token is a string representing an authorization issued to the client
+        Usually opaque to the client
+        Represents specific scopes and durations of access, granted by the resource owner, and enforced by the resource and authorization server
+    Refresh token is a string representing the authorization granted to the client by the resource owner
+        Usually opaque to the client
+        Denotes an identifier to retrieve the authorization information
+
+Opaque Tokens
+    Nothing to see
+    Unique string that acts as a database key
+    Only useful at the authorization server
+
+JWT
+    Full of authorization and profile data
+    Once validated, can use the name/value pairs (claims) to make further decisions for apps in terms of access or retrieving further information
+
+Validating JWT
+    Validating establishes trust
+    Steps
+        Retrieve your signing keys (public key that it was signed with)
+        Use periods to separate the token into header, payload, signature
+        Take the header, decode from base-64
+        Grab the key_id (kid) which should reference a key form the original document
+            No match: Document is out of date or token is not valid
+        Use the referenced key to sign the payload and compare it against the original signature
+            No match: Token is not valid or not for you, should be rejected
+        Look at four claims from the payload
+            iss: Should match our authorization server
+            aud: Should match values set in the authorization server
+            cid(client id): Should match our app client id (requestor)
+            exp: Should be in the future. If in the past, token cannot be trusted
+    If any of these steps are failed, the token is invalid and should not be used for anything
+    Token validation is all or nothing
+        No partially validated tokens
+    Use common libraries to handle this (do not build yourself)
+
+Access Token
+    When making a request to an API, use the access token
+    API does work and returns data
+    If a bad person steals the token, they can use it until expiration
+    This is why PII should not be on the token!
+    This is why there is also a token revocation spec
+
+Refresh Token
+    Opaque (not JWT)
+        Nothing to see here
+    Can only be used in the token endpoint of our authorization server
+        The server can take the refresh token, ensures its active, and issues a new active and refresh token
+        Can be revoked but still must be protected
+        If a bad person steals this, they can get a new access and refresh token
+
+ID Token
+    Always JWT (OIDC)
+    Highly structured and defined
+    100% predictable
+
+OpenID Connect
+    Primary cases are authentication and profile creation
+    Because we can validate the token, we can use it to log into our system or generate a user profile (if the token is trusted)
+
+Handling Tokens Safely
+    ID Tokens
+        User profile data
+        Can only be seen by actual user and systems shared with
+        Don't keep data if you don't need to
+        Delete whenever
+    Access Token
+        Authorization data
+        Read only, low risk data: long expiration
+        Read only, sensitive data: shorter expiration
+        Read write, sensitive data: very short
+    Refresh Tokens
+        Retrieve a new access token
+        Can only protect by revoking if we know someone malicious has one
+    Always protect your tokens
+
+OAuth2.0 Authorization Code Flow
+    Client -> Resource -> Authorization Server -> Authentication Requested -> Successful AuthN -> Returns an AuthZ Code
+    Web App Sends AuthZ Code + Client Id + Client Secret To Token Endpoint -> Returned Access/Refresh Tokens
+
+Benefits
+    Only the one-time use Authorization Code is exposed
+    Application never sees the user's credentials
+    User never sees the access or refresh tokens
+
+When To Use Authorization Code Flow
+    Retrieving the token requires the auth code, client id, and client secret
+    You should only use this when you have a user and application (with a back end component) involved
+    It cannot be used for microservices due to the lack of a user
+    Since we need the the client secret, mobile apps cant be used since the app cannot securely store a secret
+
+PKCE
+    For single page apps (SPAs) and mobile apps, we cannot store a client secret so Authorization Code Flow cannot be used
+    Instead we use Proof Key for Code Exchange (PKCE)
+        Behaves like auth code but doesn't use a client secret
+        Code verifier is generated and kept on the local system (random URL safe string of atleast 43 characters)
+        Code challenge is created (Base64 encoded SHA256 hash of the code verifier)
+        Code challenge is sent with the authorization request
+        Authorization server responds back (assuming correct authentication) with an authorization code
+        When the authorization code is sent to request tokens, the code verifier is sent in the request
+            The authorization server hashes and encodes the verified to compare against the original challenge sent
+            Since the original verifier was never sent previously, the authorization server knows it's still dealing with the original client
+
+When To Use PKCE
+    Any front-end application that cannot keep secrets
+        Mobile Apps
+        Single Page Web Apps
+        Public Clients
+    Limitations
+        No Refresh Token
+            Cannot store secrets
+            Local code challenge
+
+Authorization Code Security Considerations
+    Always use SSL/TLS (HTTPS)
+    Validate your tokens
+    Protect the auth code
+        Can only be used once and expires in 60 seconds
+    Don't worry about the access token
+    Protect your redirect_uri
+        Most auth providers force you to white list redirect uri's so our server won't send auth codes to arbitrary uris
+        Hacker will still need auth code or code verifier
+    Auth code is *hard* to compromise (unless app itself or user is compromised)
+
+OAuth2.0 Implicit Flow
+    Not technically deprecated
+    Effectively deprecated by Authorization Code with PKCE
+    Client -> Authorization Server -> Perform Authentication -> Captures Access Token
+
+Benefits of Implicit
+    Application never sees user's credentials
+    Mobile or browser app uses the underlying session storage so single sign-on scenarios work as expected
+
+Drawbacks of Implicit
+    Access token is exposed to the end-user and therefore at risk
+    This doesn't support refresh tokens
+
+Generally, use Authorization Code with PKCE instead
+
+When To Use Implicit Grant Type
+    It is not inherently insecure
+        Access tokens in URLs is risky at best (mitigated by POSTing to auth server)
+    CORS is more stable now (now we can make a POST to our authorization server)
+    Should be plan B
+
+Implicit Security Considerations
+    Always use SSL/TLS (HTTPS)
+    Validate your tokens
+    Protect your redirect uri
+    Don't use GET (since tokens are passed in the URL)
+    Use CORS
+        If CORS is supported, typically Auth Code with PKCE will also be supported
+
+OAuth2.0 Resource Owner Password
+    99.9% of the time, it's the wrong answer
+    Doomed to be insecure
+    Client -> Resource -> Presented with Login Form (application creating login page) -> Authorization Server -> Gets Access Token
+
+Resource Owner Password Drawbacks
+    Application has user's credentials
+    Doesn't support refresh tokens
+
+When To Use Resource Owner Password
+    Almost never
+        Should be considered the last option
+    Why does this even exist?
+        Pragmatism
+        Designers knew that there could be legacy applications that expect a username/password
+        Bridge legacy systems to OAuth
+        Fundamentally get old application to speak OAuth
+        It's a path, not a destination
+
+Resource Owner Password Security Considerations
+    Always use SSL/TLS (HTTPS)
+    Validate your tokens
+    Fundamental Risk: User Credentials
+        OAuth scopes don't help
+        Token revocation doesn't help
+    Last option, but not a good choice
+
+
+    
+
+
