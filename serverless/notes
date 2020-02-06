@@ -1,0 +1,43 @@
+Serverless
+    Services for compute, data, and more
+    Code and call functions (not containers and servers)
+    Execute on event triggers
+    Pay only when executed (auto-scaled)
+
+Serverless doesn't specifically mean AWS Lambda
+
+Type of Serverless Services
+    Storage
+        Files, unstructured data, structured data, data warehouses, data in batches, data in streams
+    Compute
+        Functions
+    Other
+        Machine learning
+
+Why Use Serverless
+    Huge volume of activities
+        Run web requests, queue messages, transactions
+        Isolate and scale tasks
+    Dynamic workloads
+        Run something infrequently (example: once a day/month)
+        Avoid paying for server(s) 24/7/365
+    Scheduled tasks or jobs
+        Run a certain piece of code on a schedule
+
+Risks of Serverless
+    Lock-In
+        Vendor lock-in
+        Immaturity of ecosystems (example: tools)
+        Can't migrate current legacy monolithic applications
+        Costs too much to move data, retrain people, rewrite applications
+        Too many small parts to manage
+
+Benefits of Serverless
+    Agility and cost savings
+        Quicker, smaller deployments
+        Pay only for what you use
+        Simplified scalability, management
+        Vendor manages availability, uptime, scalability, patching
+        Write less code
+
+
