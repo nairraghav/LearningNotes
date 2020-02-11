@@ -40,4 +40,7 @@ Benefits of Serverless
         Vendor manages availability, uptime, scalability, patching
         Write less code
 
-
+Serviceful Serverless
+    Use third-party APIs for as much back-end functionality as is possible
+    Require less back-end code
+    Less code means less complexity and less technical debt
