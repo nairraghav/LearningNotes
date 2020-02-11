@@ -44,3 +44,11 @@ Serviceful Serverless
     Use third-party APIs for as much back-end functionality as is possible
     Require less back-end code
     Less code means less complexity and less technical debt
+
+Serverless AWS Services
+    Function            Type                AWS Serverless Services
+    Persistence         Files               S3                       
+    Streaming Info                          
+    Transform or Query                      
+    Security                                  
+    Compute             Functions           Lambda
